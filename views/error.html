@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Whack! : Error {{error.status}} {{message}}
+{% endblock %}
+
+{% block contents %}
+    <h1>{{message}}</h1>
+    <h2>{{error.status}}</h2>
+    <pre>{{error.stack | safe}}</pre>
+{% endblock %}

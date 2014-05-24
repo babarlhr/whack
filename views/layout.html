@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+    {% block head %}
+    <head>
+        <title>{% block title %} {{title}} {%endblock%}</title>
+        {% block topcss %}{%endblock%}
+        {% block topscripts %}{%endblock%}
+    </head>
+    {% endblock %}
+    {% block body%}
+    <body>
+        {% block contents %}{%endblock%}
+        {% block css %}{%endblock%}
+        {% block scripts %}{%endblock%}
+    </body>
+    {% endblock %}
+</html>
