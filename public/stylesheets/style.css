@@ -22,12 +22,12 @@ html {
  */
 
 ::-moz-selection {
-    background: #b3d4fc;
+    background: #EBE2F6;
     text-shadow: none;
 }
 
 ::selection {
-    background: #b3d4fc;
+    background: #EBE2F6;
     text-shadow: none;
 }
 
@@ -97,13 +97,17 @@ body {
 .main-logo {
     font-family: 'Source Sans Pro';
     font-weight: 800;
-    -webkit-transform: rotate(-4deg);
     color: #4FA4FF;
     font-size: 9rem;
     border-radius: 11rem;
     line-height: 17rem;
     text-align: center;
     margin-top: -6rem;
+}
+.main-logo > img {
+    max-width: 320px;
+    margin: -2rem;
+    opacity: 1;
 }
 .screen {
     height: 100vh;
@@ -119,6 +123,7 @@ body {
     border-radius: 0.25rem;
     display: flex;
     min-width: 47rem;
+    box-shadow: 0px 3px rgba(211, 77, 195, 0.25) inset, 0px 3px 10px rgba(41, 0, 255, 0.15) inset;
 }
 
 .main-search input[name='query']{
@@ -242,6 +247,7 @@ body {
 .snip {
     padding: 2rem 1rem;
     border-bottom: dashed 1px rgb(223,223,223);
+    position: relative;
 }
 .snip:last-child {
     border-bottom: none;

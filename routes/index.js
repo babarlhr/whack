@@ -13,7 +13,7 @@ router.get('/post', function(req, res) {
 router.get('/search',function(req, res) {
     req.whack.search_snippets(req.query.query, function(err,snips){
         res.render('search.html', { 
-            title: 'Whack - '+req.query.query, 
+            title: req.query.query + ' - Whack!', 
             query: req.query.query, 
             results: snips,
             empty: snips.length === 0, 
