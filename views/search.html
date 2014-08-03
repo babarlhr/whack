@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block contents %}
+
+<section class='app'>
+    <form class='blue main-search' action='search' method='get'>
+        <input class='big nofocus' autofocus value='{{ query }}' type='text' name='query' placeholder='Search' />
+        <button type='submit' class='button square'>
+            <i class='fa fa-search'></i>
+        </button>
+    </form>
+    <section class='search-results'>
+        {% if empty %} 
+            <article class='no-results'>
+                Nothing was found !
+            </article>
+        {% else %}
+            {% for snip in results %}
+                <article class='snip'>
+                <h2 class='snip-tags'>{{ snip.tags }}</h2>
+                    <pre class='snip-contents'>{{ snip.text }}</pre>
+                </article>
+            {% endfor %} 
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

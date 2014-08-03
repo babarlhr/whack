@@ -1,0 +1,24 @@
+
+{% extends "layout.html" %}
+
+{% block contents %}
+
+<section class='app'>
+    <form class='blue main-search' action='search' method='get'>
+        <input class='big nofocus' type='text' name='query' placeholder='Search' />
+        <button type='submit' class='button square'>
+            <i class='fa fa-search'></i>
+        </button>
+    </form>
+    <form class='compose white' action='api/snip/create/' method='get'>
+        <input class='big nofocus' type='text' name='tags', placeholder='Tags' />
+        <textarea class='big nofocus' name='text', placeholder='Contents' ></textarea>
+        <button type='submit' class='button square'>
+            Post
+        </button>
+    </form>
+    </section>
+
+</section>
+
+{% endblock %}
