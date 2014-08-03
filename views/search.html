@@ -16,10 +16,32 @@
             </article>
         {% else %}
             {% for snip in results %}
-                <article class='snip'>
-                <h2 class='snip-tags'>{{ snip.tags }}</h2>
-                    <pre class='snip-contents'>{{ snip.text }}</pre>
-                </article>
+                {% if snip %}
+                    <article class='snip'>
+                    <h2 class='snip-tags'>{{ snip.tags }}</h2>
+                        <pre class='snip-contents'>{{ snip.text }}</pre>
+                    </article>
+                {% else %}
+                    <article class='compose'>
+                        <textarea class='big nofocus' name='text', placeholder='New Content'></textarea>
+                        <button type='submit' class='button square'>
+                            Save
+                        </button>
+                    </article>
+                    <script>
+                        $(function(){
+                            $('.compose button[type="submit"]').click(function(){
+                                console.log('CLICK!');
+                                $.get('/api/snip/create/',{
+                                    tags: $('.main-search input[type="text"]').val(),
+                                    text: $('.compose textarea').val(),
+                                },function(){
+                                    window.location = window.location;
+                                });
+                            });
+                        });
+                    </script>
+                {% endif %}
             {% endfor %} 
         {% endif %}
 

@@ -347,7 +347,7 @@ Whack.prototype = {
 
         snippet._uid = uid;
         snippet.tags = taglist.join(' ');
-
+        
         this.snippets[uid] = snippet;
         if( taglist.length ){
             this.insert_tags(taglist,uid);
@@ -377,19 +377,12 @@ Whack.prototype = {
         for(var i = 0; i < uids.length; i++){
             snippets.push(this.snippets[uids[i]]);
         }
-        if(result){
-            result(false,snippets);
-        }
-    },
-    get_all_snippets: function(result){
-        var snippets = [];
-        for(var uid in this.snippets){
-            snippets.push(this.snippets[uid]);
+        if (!snippets[0] || snippets[0].tags !== tags.join(' ')){
+            snippets.unshift(null);
         }
         if(result){
             result(false,snippets);
         }
-        //this.db.snippets.find(result);
     },
 };
 

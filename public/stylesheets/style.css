@@ -258,6 +258,7 @@ body {
 .snip .snip-contents {
     font-family: Inconsolata;
     margin: 1rem 2rem;
+    white-space: pre-wrap;
 }
 .no-results {
     text-align: center;
