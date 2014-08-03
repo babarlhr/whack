@@ -80,8 +80,8 @@ app.use(function(err, req, res, next) {
 });
 
 whack.load_db(function(){
-    console.log('Listening on port 3000');
-    app.listen(3000);
+    console.log('Listening on port 4444');
+    app.listen(4444);
 });
 
 
