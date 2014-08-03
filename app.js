@@ -1,20 +1,41 @@
-var nunjucks = require('nunjucks');
-var express = require('express');
-var path = require('path');
-var favicon = require('static-favicon');
-var logger = require('morgan');
+
+/* --- libraries --- */
+
+var nunjucks     = require('nunjucks');
+var Whack        = require('./whack.js').Whack;
+var express      = require('express');
+var path         = require('path');
+var favicon      = require('static-favicon');
+var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var bodyParser   = require('body-parser');
+
+/* --- routes --- */
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var api    = require('./routes/api');
+
+/* --- whack --- */
+
+var whack = new Whack();
+
+/* --- express --- */
 
 var app = express();
 
-// view engine setup
+/* --- templating engine setup --- */
+
 nunjucks.configure('views',{
     autoescape: true,
     express: app,
+});
+
+
+/* --- Express modules --- */
+
+app.use(function(req,res,next){
+    req.whack = whack;
+    next();
 });
 
 app.use(favicon());
@@ -24,8 +45,8 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/api', api);
 app.use('/', routes);
-app.use('/users', users);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -56,6 +77,11 @@ app.use(function(err, req, res, next) {
         message: err.message,
         error: {}
     });
+});
+
+whack.load_db(function(){
+    console.log('Listening on port 3000');
+    app.listen(3000);
 });
 
 

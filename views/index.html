@@ -1,5 +1,15 @@
 {% extends "layout.html" %}
 
 {% block contents %}
-    Hello World!
+    <div class='screen centering'>
+        <div class='main-logo'>
+            WHACK<i>!</i>
+        </div>
+        <form class='blue main-search' action='search' method='get'>
+            <input class='big nofocus' type='text' name='query' placeholder='Search' />
+            <button type='submit' class='button square'>
+                <i class='fa fa-search'></i>
+            </button>
+        </form>
+    </div>
 {% endblock %}

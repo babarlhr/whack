@@ -2,9 +2,9 @@ var mongojs      = require('mongojs');
 var hash         = require('./libs/murmur3.js').hash;
 var Queue        = require('./queue.js').Queue;
 
-function Index(name){
+function Index(name,entries){
     this.name = name;
-    this.index = [];
+    this.index = entries || [];
 }
 Index.prototype = {
     length: function(){
@@ -79,7 +79,7 @@ Index.prototype = {
 };
 
 function Whack(db){
-    this.db = mongojs('mongodb://localhost:27017/whack',['users','snippets']);
+    this.db = mongojs('mongodb://localhost:27017/whack',['indexes','snippets']);
     this.tagtree = {
         snippets: [],
         subtags:  [],
@@ -97,6 +97,37 @@ function Whack(db){
 };
 
 Whack.prototype = {
+    load_db: function(result){
+        var self = this;
+
+        function done(err){
+            if(result){ result(err); }
+        }
+        function load_snippets(then){
+            self.db.snippets.find({},function(err,snippets){
+                if (err) {
+                    done(err);
+                } else {
+                    console.log('LOADING '+snippets.length+' SNIPPETS FROM DB...');
+                    for (var i = 0; i < snippets.length; i++){
+                        var snippet = snippets[i];
+                        if ( snippet.tags && snippet.text) { 
+                            self.create_snippet({
+                                tags: snippet.tags,
+                                text: snippet.text,
+                            },{ nodb:true });
+                        }
+                    }
+                    console.log('DONE');
+                    then();
+                }
+            });
+        }
+
+        load_snippets(done);
+
+        return this;
+    },
     uid: function(){
         if(!this._uid){
             this._uid = 1;
@@ -144,7 +175,6 @@ Whack.prototype = {
         for (var i = 0; i < tags.length; i++) {
             var tag = tags[i];
             tag = tag.toLowerCase();
-            console.log(tag);
             if (!tagset[tag]) {
                 ntags.push(tag);
                 tagset[tag] = true;
@@ -152,17 +182,14 @@ Whack.prototype = {
         }
 
         ntags.sort(function(a,b){ return a.localeCompare(b); });
-        console.log("TAGS_NORMALIZE:\n",tagstr,"\n",ntags);
         return ntags;
     },
     tags_score: function(taglist) {
-        console.log("TAG_SCORE:",taglist);
         var score = this.hash(taglist.join(' ')) * 0.05;
         for (var i = 0; i < taglist.length; i++) {
             var tag = taglist[i];
             score += (this.scores[tag[0]] || 1);
         }
-        console.log("SCORE:",score);
         return score;
     },
     indexes_create: function(taglist) {
@@ -313,11 +340,10 @@ Whack.prototype = {
         return matches;
     },
 
-    create_snippet: function(snippet,result){
-        console.log('CREATING SNIPPET ',JSON.stringify(snippet));
+    create_snippet: function(snippet,options,result){
+        options = options || {};
         var uid     = this.uid();
         var taglist = this.tags_normalize(snippet.tags); 
-        console.log("UID:",uid,"TAGLIST:",taglist);
 
         snippet._uid = uid;
         snippet.tags = taglist.join(' ');
@@ -326,30 +352,31 @@ Whack.prototype = {
         if( taglist.length ){
             this.insert_tags(taglist,uid);
         }
-        this.indexes_print();
-        
-        if(result){
-            result(false,snippet);
+
+        function done(err,snippet){
+            if (result){ result(err,snippet); }
+        }
+
+        if (!options.nodb) {
+            this.db.snippets.insert(snippet,function(err){
+                done(err,snippet);
+            });
+        } else {
+            done(snippet);
         }
     },
     get_snippet:  function(uid,result){
         if(result){
             result(false,this.snippets[uid]);
         }
-        /*this.db.snippets.findOne({
-            _id: mongojs.ObjectID(id),
-        }, result);*/
     },
     search_snippets: function(tags, result){
         tags = this.tags_normalize(tags);
-        console.log('SEARCH_SNIPPETS:',tags);
         var uids = this.search_tags(tags);
-        console.log('RESULTS:',uids)
         var snippets = [];
         for(var i = 0; i < uids.length; i++){
             snippets.push(this.snippets[uids[i]]);
         }
-        console.log("SNIPPETS:",snippets);
         if(result){
             result(false,snippets);
         }

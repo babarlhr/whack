@@ -1,4 +1,5 @@
 run:
-	DEBUG=whack ./bin/www
+	node app.js
+	#DEBUG=whack ./bin/www
 install:
 	npm install
