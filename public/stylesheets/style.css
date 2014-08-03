@@ -246,7 +246,7 @@ body {
 
 .snip {
     padding: 2rem 1rem;
-    border-bottom: dashed 1px rgb(223,223,223);
+    padding-bottom: 0;
     position: relative;
 }
 .snip:last-child {
@@ -259,6 +259,8 @@ body {
     font-family: Inconsolata;
     margin: 1rem 2rem;
     white-space: pre-wrap;
+    border-left: solid 1rem whitesmoke;
+    padding: 0 1rem;
 }
 .no-results {
     text-align: center;
